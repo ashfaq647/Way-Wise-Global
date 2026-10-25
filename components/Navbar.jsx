@@ -15,10 +15,10 @@ const links = [
 // >>> PUT YOUR REAL URLS IN `href` <<<
 // `tag` = small grey text under the name (change it if you like)
 const companies = [
-  { label: "Way-Wise Tech", tag: "Technology", href: "#" }, // TODO: Tech URL
-  { label: "Pother Bazar", tag: "Consumer", href: "#" }, // TODO: Pother Bazar URL
+  { label: "Way-Wise Tech", tag: "Technology", href: "https://waywisetech.com/" }, // TODO: Tech URL
+  { label: "Pother Bazar", tag: "Consumer", href: "https://www.potherbazar.com/" }, // TODO: Pother Bazar URL
   { label: "Way-Wise Trading", tag: "Trading", href: "#" }, // TODO: Trading URL
-  { label: "Way-Wise Jobs", tag: "Recruitment", href: "#" }, // TODO: Jobs URL
+  { label: "Way-Wise Jobs", tag: "Recruitment", href: "https://waywisejobs.com/" }, // TODO: Jobs URL
 ];
 
 export default function Navbar() {
