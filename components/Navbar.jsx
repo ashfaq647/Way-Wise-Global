@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { PartnerWithUsLink } from "@/components/PartnerWithUs";
 
 const links = [
   { label: "Home", href: "/", active: true },
@@ -235,12 +236,11 @@ export default function Navbar() {
           </ul>
 
           {/* Call to action button (desktop) */}
-          <Link
-            href="#contact"
+          <PartnerWithUsLink
             className="hidden h-12 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-[max(1rem,14px)] leading-[1.5] font-bold capitalize text-white hover:bg-[#660100] xl:flex"
           >
             Partner with us
-          </Link>
+          </PartnerWithUsLink>
 
           {/* ================= Hamburger button (below 1280px) ================= */}
           <button
@@ -384,13 +384,12 @@ export default function Navbar() {
                 )}
               </ul>
 
-              <Link
-                href="#contact"
+              <PartnerWithUsLink
                 onClick={closeMobile}
                 className="mt-5 flex h-12 w-full items-center justify-center rounded-lg bg-[#b80100] font-oxanium sm:w-auto sm:px-[1.875rem] text-base font-bold capitalize text-white active:bg-[#9a0100]"
               >
                 Partner with us
-              </Link>
+              </PartnerWithUsLink>
             </div>
           </div>
         </div>
