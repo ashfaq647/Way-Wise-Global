@@ -1,6 +1,7 @@
 import { Poppins, Oxanium, Public_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { PartnerWithUsProvider } from "@/components/PartnerWithUs";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -33,8 +34,10 @@ export default function RootLayout({ children }) {
       className={`${poppins.variable} ${oxanium.variable} ${publicSans.variable}`}
     >
       <body className="bg-black font-poppins text-white">
-        <Navbar />
-        {children}
+        <PartnerWithUsProvider>
+          <Navbar />
+          {children}
+        </PartnerWithUsProvider>
       </body>
     </html>
   );

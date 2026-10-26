@@ -89,7 +89,7 @@ export default function AboutUs() {
       />
 
       <div className="mx-auto max-w-[120rem] px-6 py-10 sm:py-20 lg:px-16 xl:px-[12.5rem] xl:py-[7.5rem]">
-        <div className="flex flex-col items-center gap-16 pb-20 min-[1100px]:flex-row min-[1100px]:justify-between min-[1100px]:gap-[6vw] xl:gap-[10.1875rem] xl:pb-[7.5rem]">
+        <div className="flex flex-col items-center gap-16 pb-20 min-[1100px]:flex-row min-[1100px]:justify-center min-[1100px]:gap-[6vw] xl:gap-[10.1875rem] xl:pb-[7.5rem]">
           {/* ---------- Collage (664 x 610) ---------- */}
           <div
             className="relative aspect-[664/610] w-full min-w-0 max-w-[41.5rem] min-[1100px]:flex-1 min-[1100px]:basis-0"
@@ -117,12 +117,13 @@ export default function AboutUs() {
               />
             </div>
 
-            {/* Rating card: gap, padding, radius and text all shrink with the collage */}
-            <div className="absolute bottom-[-1.25rem] right-0 flex w-[41.7%] flex-col items-center gap-[clamp(0.5rem,2.86cqw,1.1875rem)] rounded-[clamp(1rem,4.5cqw,1.875rem)] border border-[#d8dde1] bg-white px-[8.13%] py-[clamp(0.875rem,5.12cqw,2.125rem)]">
+            {/* Rating card: gap, padding, radius and text all shrink with the collage.
+                Up to 450px it sits 12px lower so the two-line text doesn't push it into the ship photo. */}
+            <div className="absolute bottom-[-1.25rem] right-0 max-[451px]:bottom-[-2rem] flex w-[41.7%] flex-col items-center gap-[clamp(0.5rem,2.86cqw,1.1875rem)] rounded-[clamp(1rem,4.5cqw,1.875rem)] border border-[#d8dde1] bg-white px-[8.13%] py-[clamp(0.875rem,5.12cqw,2.125rem)]">
               <div className="flex w-full flex-col items-center gap-[clamp(0.5rem,3.3cqw,1.375rem)]">
                 <p
                   className={`${calSans.className} w-full text-center leading-[0.763] text-[#b80100]`}
-                  style={{ fontSize: "clamp(2.25rem, 11.45cqw, 4.75rem)" }}
+                  style={{ fontSize: "clamp(1.75rem, 11.45cqw, 4.75rem)" }}
                 >
                   4.9
                 </p>
@@ -146,7 +147,9 @@ export default function AboutUs() {
                 <p
                   className={`${jakarta.className} whitespace-nowrap text-center text-[length:clamp(0.625rem,2.1cqw,1rem)] xl:text-[length:clamp(12px,2.41cqw,1rem)] font-medium leading-tight text-[#b80100]`}
                 >
-                  2k+ satisfied customers
+                  2k+ satisfied
+                  <br className="min-[451px]:hidden" />{" "}
+                  customers
                 </p>
               </div>
             </div>

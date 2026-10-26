@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { PartnerWithUsLink } from "@/components/PartnerWithUs";
 
 const CTA = {
   title: "Ready To Build the Next Opportunity Together?",
@@ -31,12 +31,12 @@ export default function CtaBanner() {
             <p className="font-poppins text-base md:text-[max(1.125rem,15px)]">{CTA.text}</p>
           </div>
 
-          <Link
+          <PartnerWithUsLink
             href={CTA.button.href}
-           className="flex h-12 w-full items-center justify-center rounded-lg px-[1.875rem] py-[0.625rem] font-oxanium text-[max(1rem,14px)] font-bold capitalize leading-6 text-white ring-1 ring-inset ring-white transition-[background-color,box-shadow] duration-500 ease-out hover:bg-white/10 hover:ring-[0.5px] focus-visible:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
+           className="flex h-14 w-full items-center justify-center rounded-lg px-[2.25rem] py-[0.625rem] font-oxanium text-[max(1rem,14px)] font-bold capitalize leading-6 text-white ring-1 ring-inset ring-white transition-[background-color,box-shadow] duration-500 ease-out hover:bg-white/10 hover:ring-[0.5px] focus-visible:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
           >
             {CTA.button.label}
-          </Link>
+          </PartnerWithUsLink>
         </div>
       </div>
     </section>
