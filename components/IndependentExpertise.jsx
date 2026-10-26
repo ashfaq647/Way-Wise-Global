@@ -5,7 +5,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { PartnerWithUsLink } from "@/components/PartnerWithUs";
 import { Space_Grotesk, Inter } from "next/font/google";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400"] });
@@ -414,7 +414,7 @@ export default function IndependentExpertise() {
                     </button>
 
                     <span
-                     className={`${spaceGrotesk.className} pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-xs transition-colors duration-300 sm:text-sm lg:text-[0.8125rem] xl:text-base ${
+                     className={`${spaceGrotesk.className} pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[0.8125rem] transition-colors duration-300 sm:text-[0.9375rem] lg:text-sm xl:text-[1.125rem] ${
                         labelAbove ? "bottom-full mb-1.5" : "top-full mt-1.5"
                       } ${isActive ? "text-white" : "text-[#a5a5a5]"}`}
                     >
@@ -452,12 +452,12 @@ export default function IndependentExpertise() {
             ))}
           </ul>
 
-          <Link
+          <PartnerWithUsLink
             href="#contact"
             className="flex h-12 w-full items-center justify-center rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-base font-bold capitalize text-white hover:bg-[#9a0100] sm:h-14 sm:w-auto sm:text-lg xl:text-xl"
           >
             Partner with us
-          </Link>
+          </PartnerWithUsLink>
         </div>
       </div>
     </section>
