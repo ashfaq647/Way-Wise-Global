@@ -230,7 +230,7 @@ export default function IndependentExpertise() {
 
   return (
     <section id="expertise" className="bg-[url('/images/independentExpertise-bg.png')] bg-cover bg-center text-white">
-      <div className="mx-auto flex max-w-[120rem] flex-col items-center gap-10 px-6 py-10 sm:gap-12 sm:py-20 lg:flex-row lg:gap-[5vw] lg:px-16 xl:gap-20 xl:px-[15.625rem] xl:py-[6.25rem]">
+      <div className="mx-auto flex max-w-[120rem] flex-col-reverse items-center gap-10 px-6 py-10 sm:gap-12 lg:px-16 min-[1100px]:flex-row min-[1100px]:gap-[5vw] min-[1100px]:px-16 xl:gap-20 xl:px-[15.625rem] xl:py-[6.25rem]">
         {/* ---------- Left: diagram ---------- */}
         <div
           ref={diagramRef}
@@ -246,7 +246,7 @@ export default function IndependentExpertise() {
               setTouchTick((n) => n + 1);
             }
           }}
-          className="relative isolate flex w-full min-w-0 max-w-[43.625rem] items-center justify-center rounded-[0.625rem] border border-[#2e2e2e] p-3 sm:p-[1.3125rem] lg:flex-1 lg:basis-0 xl:h-[38.125rem]"
+          className="relative isolate flex w-full min-w-0 max-w-[43.625rem] items-center justify-center rounded-[0.625rem] border border-[#2e2e2e] p-3 sm:p-[1.3125rem] lg:flex-1 lg:basis-0 xl:grow-0 xl:basis-auto xl:h-[38.125rem]"
         >
           {/* DRAWING-GLITCH FIX: the blurred glass background is its OWN layer, behind the diagram.
               Before, the blur was on the box that CONTAINS all the moving parts. Chrome can then
@@ -428,7 +428,7 @@ export default function IndependentExpertise() {
         </div>
 
         {/* ---------- Right: text ---------- */}
-        <div className="flex w-full min-w-0 flex-1 flex-col items-start gap-6 sm:gap-[1.875rem] lg:basis-0">
+        <div className="flex w-full min-w-0 max-w-[43.625rem] flex-1 flex-col items-start gap-6 sm:gap-[1.875rem] lg:basis-0 self-start min-[1100px]:self-auto min-[1100px]:max-w-none">
           <h2 className="font-oxanium text-[clamp(1.625rem,7.4vw,2.25rem)] font-bold leading-tight sm:text-4xl md:text-[3.125rem] md:leading-[3.75rem]">
             Independent Expertise.
             <br />
@@ -440,7 +440,7 @@ export default function IndependentExpertise() {
             leadership, technology, market access and operational support.
           </p>
 
-          <ul className="flex w-full max-w-[35.1875rem] flex-col gap-2.5 md:max-w-none">
+          <ul className="flex w-full max-w-[35.1875rem] flex-col gap-2.5 md:max-w-none xl:max-w-[35.1875rem]">
             {checklist.map((item) => (
               <li
                 key={item}
@@ -454,7 +454,7 @@ export default function IndependentExpertise() {
 
           <PartnerWithUsLink
             href="#contact"
-            className="flex h-12 w-full items-center justify-center rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-base font-bold capitalize text-white hover:bg-[#9a0100] sm:h-14 sm:w-auto sm:text-lg xl:text-xl"
+            className="flex h-12 w-full items-center justify-center rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-base font-bold capitalize text-white hover:bg-[#9a0100] sm:w-auto xl:h-[3.25rem] xl:text-[max(1.0625rem,15px)]"
           >
             Partner with us
           </PartnerWithUsLink>

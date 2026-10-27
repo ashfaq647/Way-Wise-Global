@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function VisionChairman() {
   return (
     <section id="vision" className="bg-[url('/images/vision-bg.png')] bg-cover bg-center text-white">
-      <div className="mx-auto flex max-w-[120rem] flex-col items-center justify-center gap-12 px-6 py-10 sm:py-20 lg:px-16 min-[1100px]:flex-row min-[1100px]:gap-[7vw] xl:gap-[8.75rem] xl:px-[18.125rem] xl:py-[7.5rem]">
+      <div className="mx-auto flex max-w-[120rem] flex-col-reverse items-center justify-center gap-12 px-6 py-10 sm:py-20 min-[1100px]:flex-row lg:px-16 lg:gap-[7vw] xl:gap-[8.75rem] xl:px-[18.125rem] xl:py-[7.5rem]">
         {/* ---------- Left: photo with the pink card behind it ---------- */}
         <div className="relative aspect-square w-full max-w-[31.25rem] shrink-0">
           {/* Pink card behind (pure CSS, no image needed) */}
