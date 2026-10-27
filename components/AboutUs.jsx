@@ -89,7 +89,10 @@ export default function AboutUs() {
       />
 
       <div className="mx-auto max-w-[120rem] px-6 py-10 sm:py-20 lg:px-16 xl:px-[12.5rem] xl:py-[7.5rem]">
-        <div className="flex flex-col items-center gap-16 pb-20 min-[1100px]:flex-row min-[1100px]:justify-center min-[1100px]:gap-[6vw] xl:gap-[10.1875rem] xl:pb-[7.5rem]">
+      
+        {/* From sm to below lg: content above, image below.
+        From lg and above: image left, content right. */}
+       <div className="flex flex-col-reverse items-center gap-16 pb-20 min-[1100px]:flex-row min-[1100px]:justify-center min-[1100px]:gap-[6vw] xl:gap-[10.1875rem] xl:pb-[7.5rem]">
           {/* ---------- Collage (664 x 610) ---------- */}
           <div
             className="relative aspect-[664/610] w-full min-w-0 max-w-[41.5rem] min-[1100px]:flex-1 min-[1100px]:basis-0"
