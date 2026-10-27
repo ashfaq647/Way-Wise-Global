@@ -140,16 +140,16 @@ export default function Hero() {
                 the viewport and the photo has to stay behind the same content. */}
             <div
               aria-hidden
-              className="pointer-events-none absolute right-[-2.5625rem] top-[-11.6875rem] -z-5 h-[17rem] w-[max(27.9375rem,calc(100vw_+_1rem))] sm:hidden"
+              className="pointer-events-none absolute inset-x-[-1rem] top-[-11.6875rem] -z-5 h-[17rem] w-auto sm:hidden"
             >
               <Image
                 src="/images/hero-bg-mobile.jpg"
                 alt=""
                 fill
                 sizes="(max-width: 639px) 100vw, 28rem"
-                className="object-cover"
+                className="object-cover scale-[1.05]"
               />
-              <div className="absolute inset-0 bg-linear-to-b from-black to-black/0" />
+              <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/10 to-transparent" />
             </div>
             <div
               aria-hidden
