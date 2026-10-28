@@ -193,7 +193,7 @@ export default function PartnerWithUsModal({ open, onClose, returnFocusRef }) {
                   </label>
                 ))}
 
-                {/* In Figma this label sits 16px above the box, not 8px like the others */}
+                
                 <label className="flex flex-col gap-[16px] sm:col-span-2">
                   <Label>Tell us about your opportunity</Label>
                   <textarea

@@ -7,7 +7,7 @@ const SITE = {
   about:
     "Way Wise Global brings together technology, construction, real estate, trading, recruitment, and consumer ventures under one shared vision for sustainable global growth.",
   phone: { label: "000-000-1234", href: "tel:0000001234" },
-  email: { label: "support@filewyse.com", href: "mailto:support@filewyse.com" },
+  email: { label: "support@waywiseglobal.com", href: "mailto:support@filewyse.com" },
   copyright: "© 2026 Way Wise Global. All Rights Reserved.",
   legal: [
     { label: "Terms & Conditions", href: "/terms" },
@@ -89,7 +89,7 @@ function ContactItem({ label, value, href, children }) {
 
 export default function Footer() {
   return (
-    <footer className="relative isolate overflow-hidden bg-[url('/images/vision-bg.png')] bg-cover bg-center text-white">
+    <footer id="footer" className="relative isolate overflow-hidden bg-[url('/images/vision-bg.png')] bg-cover bg-center text-white">
       <Image
         src="/images/footer-bg.png"
         alt=""
@@ -190,9 +190,9 @@ export default function Footer() {
           <hr className="border-0 border-t border-white/20" />
           <div className={`flex flex-col gap-3 text-[max(1rem,14px)] leading-[max(1.5rem,22px)] sm:flex-row sm:items-center sm:justify-between ${publicSans}`}>
             <p>{SITE.copyright}</p>
-            <div className="flex flex-wrap gap-x-5 gap-y-2 sm:flex-nowrap sm:gap-[1.625rem]">
+            <div className="flex flex-nowrap gap-x-5 sm:gap-[1.625rem]">
               {SITE.legal.map((l) => (
-                <Link key={l.label} href={l.href} className="transition-colors duration-300 hover:text-[#ff4d4d] active:text-[#ff4d4d]">
+                <Link key={l.label} href={l.href} className="whitespace-nowrap transition-colors duration-300 hover:text-[#ff4d4d] active:text-[#ff4d4d]">
                   {l.label}
                 </Link>
               ))}
