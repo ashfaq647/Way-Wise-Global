@@ -37,7 +37,7 @@ export default function HowWeBuild() {
     <section id="process" className="bg-[url('/images/howWeBuild-bg.png')] bg-cover bg-center text-white">
       {/* xl (1280–1535px): small side padding so the 4 columns get Figma-size text.
           2xl (1536px+): back to the Figma 250px. */}
-      <div className="mx-auto flex max-w-[120rem] flex-col items-center gap-8 px-6 py-14 sm:gap-[3.125rem] sm:py-20 lg:px-16 xl:px-10 xl:py-[7.5rem] 2xl:px-[15.625rem]">
+      <div className="mx-auto flex max-w-[120rem] flex-col items-center gap-8 px-6 pt-14 pb-6 sm:gap-[3.125rem] sm:py-12 lg:px-16 xl:px-10 xl:py-[7.5rem] 2xl:px-[15.625rem]">
         <div className="flex max-w-[56.625rem] flex-col gap-2.5 text-center">
           <h2 className="font-oxanium text-[clamp(1.625rem,7.4vw,2.25rem)] font-bold leading-tight sm:text-4xl md:text-[3.125rem] md:leading-[3.75rem]">
             How We Build Lasting <span className="text-[#b80100]">Business Value</span>

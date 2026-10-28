@@ -5,21 +5,105 @@ import Image from "next/image";
 import Link from "next/link";
 import { PartnerWithUsLink } from "@/components/PartnerWithUs";
 
+// `smooth` = scrolled with the custom animation below (slower / softer than the browser default)
 const links = [
-  { label: "Home", href: "/", active: true },
+  { label: "Home", href: "/", active: true, smooth: true },
   { label: "Our Companies", href: "#companies", dropdown: true },
-  { label: "About Us", href: "#about" },
+  { label: "About Us", href: "#about", smooth: true },
   { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "#footer", smooth: true },
 ];
+
+let cancelScroll = null;
+
+// Animate the page to `top`. Duration grows with distance (950ms–1900ms) and uses an
+// ease-in-out curve. Each frame scrolls with behavior "instant" so the CSS
+// `scroll-behavior: smooth` in globals.css doesn't fight the animation.
+function smoothScrollTo(top) {
+  cancelScroll?.();
+  const start = window.scrollY;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const target = Math.max(0, Math.min(top, max));
+  const distance = target - start;
+
+  if (
+    Math.abs(distance) < 1 ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    window.scrollTo({ top: target, behavior: "instant" });
+    return;
+  }
+
+  const duration = Math.min(1900, Math.max(950, 600 + Math.abs(distance) * 0.35));
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  let startTime = null;
+  let frame;
+
+  // stop if the user scrolls / touches the page themselves
+  const stop = () => {
+    cancelAnimationFrame(frame);
+    window.removeEventListener("wheel", stop);
+    window.removeEventListener("touchstart", stop);
+    window.removeEventListener("keydown", stop);
+    cancelScroll = null;
+  };
+  window.addEventListener("wheel", stop, { passive: true });
+  window.addEventListener("touchstart", stop, { passive: true });
+  window.addEventListener("keydown", stop);
+  cancelScroll = stop;
+
+  const step = (now) => {
+    if (startTime === null) startTime = now;
+    const t = Math.min(1, (now - startTime) / duration);
+    window.scrollTo({ top: start + distance * ease(t), behavior: "instant" });
+    if (t < 1) frame = requestAnimationFrame(step);
+    else stop();
+  };
+  frame = requestAnimationFrame(step);
+}
+
+// Click handler for the `smooth` links: Home goes to the very top, hash links go to
+// their section (minus the sticky-navbar offset from `scroll-padding-top`).
+function handleSmoothClick(e, href) {
+  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  if (window.location.pathname !== "/") return; // other pages: normal navigation
+
+  let top = 0;
+  if (href.startsWith("#")) {
+    const el = document.getElementById(href.slice(1));
+    if (!el) return;
+    const offset =
+      parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    top = el.getBoundingClientRect().top + window.scrollY - offset;
+  }
+
+  e.preventDefault();
+  // keep the URL the same as before ("/" for Home, "/#about", "/#footer")
+  const url = href.startsWith("#") ? `/${href}` : href;
+  if (window.location.pathname + window.location.hash !== url)
+    window.history.pushState(null, "", url);
+  smoothScrollTo(top);
+}
 
 // >>> PUT YOUR REAL URLS IN `href` <<<
 // `tag` = small grey text under the name (change it if you like)
 const companies = [
-  { label: "Way-Wise Tech", tag: "Technology", href: "https://waywisetech.com/" }, // TODO: Tech URL
-  { label: "Pother Bazar", tag: "Consumer", href: "https://www.potherbazar.com/" }, // TODO: Pother Bazar URL
+  {
+    label: "Way-Wise Tech",
+    tag: "Technology",
+    href: "https://waywisetech.com/",
+  }, // TODO: Tech URL
+  {
+    label: "Pother Bazar",
+    tag: "Consumer",
+    href: "https://www.potherbazar.com/",
+  }, // TODO: Pother Bazar URL
   { label: "Way-Wise Trading", tag: "Trading", href: "#" }, // TODO: Trading URL
-  { label: "Way-Wise Jobs", tag: "Recruitment", href: "https://waywisejobs.com/" }, // TODO: Jobs URL
+  {
+    label: "Way-Wise Jobs",
+    tag: "Recruitment",
+    href: "https://waywisejobs.com/",
+  }, // TODO: Jobs URL
 ];
 
 export default function Navbar() {
@@ -42,7 +126,8 @@ export default function Navbar() {
   useEffect(() => {
     if (!open) return;
     const onDown = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setOpen(false);
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target))
+        setOpen(false);
     };
     document.addEventListener("pointerdown", onDown);
     return () => document.removeEventListener("pointerdown", onDown);
@@ -108,12 +193,17 @@ export default function Navbar() {
                   key={item.label}
                   ref={dropdownRef}
                   className="relative"
-                  onPointerEnter={(e) => e.pointerType === "mouse" && setOpen(true)}
-                  onPointerLeave={(e) => e.pointerType === "mouse" && setOpen(false)}
+                  onPointerEnter={(e) =>
+                    e.pointerType === "mouse" && setOpen(true)
+                  }
+                  onPointerLeave={(e) =>
+                    e.pointerType === "mouse" && setOpen(false)
+                  }
                   onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
                   onBlur={(e) => {
                     // close when keyboard focus leaves the whole dropdown
-                    if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false);
+                    if (!e.currentTarget.contains(e.relatedTarget))
+                      setOpen(false);
                   }}
                 >
                   <button
@@ -169,9 +259,13 @@ export default function Navbar() {
                           key={c.label}
                           role="none"
                           className={`transition-all duration-300 ease-out ${
-                            open ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+                            open
+                              ? "translate-y-0 opacity-100"
+                              : "translate-y-1 opacity-0"
                           }`}
-                          style={{ transitionDelay: open ? `${60 + i * 45}ms` : "0ms" }}
+                          style={{
+                            transitionDelay: open ? `${60 + i * 45}ms` : "0ms",
+                          }}
                         >
                           <a
                             role="menuitem"
@@ -222,6 +316,11 @@ export default function Navbar() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
+                    onClick={
+                      item.smooth
+                        ? (e) => handleSmoothClick(e, item.href)
+                        : undefined
+                    }
                     className={`whitespace-nowrap ${
                       item.active
                         ? "font-medium text-[#b80100]"
@@ -231,14 +330,12 @@ export default function Navbar() {
                     {item.label}
                   </Link>
                 </li>
-              )
+              ),
             )}
           </ul>
 
           {/* Call to action button (desktop) */}
-          <PartnerWithUsLink
-            className="hidden h-12 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-[max(1rem,14px)] leading-[1.5] font-bold capitalize text-white hover:bg-[#660100] xl:flex"
-          >
+          <PartnerWithUsLink className="hidden h-12 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-[max(1rem,14px)] leading-[1.5] font-bold capitalize text-white hover:bg-[#660100] xl:flex">
             Partner with us
           </PartnerWithUsLink>
 
@@ -370,7 +467,10 @@ export default function Navbar() {
                     <li key={item.label} className="border-b border-white/10">
                       <Link
                         href={item.href}
-                        onClick={closeMobile}
+                        onClick={(e) => {
+                          closeMobile();
+                          if (item.smooth) handleSmoothClick(e, item.href);
+                        }}
                         className={`block py-3.5 transition-colors duration-200 ${
                           item.active
                             ? "font-medium text-[#b80100]"
@@ -380,7 +480,7 @@ export default function Navbar() {
                         {item.label}
                       </Link>
                     </li>
-                  )
+                  ),
                 )}
               </ul>
 

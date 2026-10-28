@@ -170,7 +170,7 @@ export default function AboutUs() {
 
           {/* ---------- Text (591px) ---------- */}
           <div className="flex w-full min-w-0 max-w-[41.5rem] flex-col gap-[1.875rem] min-[1100px]:max-w-[36.9375rem] min-[1100px]:flex-1 min-[1100px]:basis-0">
-            <div className="flex flex-col gap-[1.3125rem] border-b border-[#656565] pb-6">
+            <div className="flex flex-col gap-[1.3125rem] pb-6">
               <h2 className="font-oxanium text-4xl font-bold leading-tight min-[1100px]:text-5xl min-[1100px]:leading-[3.625rem]">
                 About Us
               </h2>
@@ -192,38 +192,7 @@ export default function AboutUs() {
               </div>
             </div>
 
-            <Link
-              href="/#about"
-              className="group flex h-12 w-fit items-center justify-center gap-2 rounded-lg bg-[#b80100] px-[1.875rem] py-[0.625rem] font-oxanium text-[max(1rem,14px)] font-bold capitalize leading-6 text-white transition-colors duration-300 ease-out hover:bg-[#660100] focus-visible:bg-[#660100]"
-            >
-              Know More
-              {/* Two arrows in a one-arrow window; hover slides the strip to swap them */}
-              <span
-                aria-hidden
-                className="relative block size-6 overflow-hidden"
-              >
-                <span className="flex w-12 -translate-x-6 transition-transform duration-300 ease-out group-hover:translate-x-0 group-focus-visible:translate-x-0">
-                  {[0, 1].map((i) => (
-                    <svg
-                      key={i}
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="size-6 shrink-0"
-                    >
-                      <path
-                        d="M12 5L19 12L12 19M5 12H19"
-                        stroke="white"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  ))}
-                </span>
-              </span>
-            </Link>
+            
           </div>
         </div>
 

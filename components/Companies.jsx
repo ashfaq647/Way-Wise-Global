@@ -13,7 +13,7 @@ const companies = [
     logo: "/images/cards/tech.svg",
     logoW: 180,
     logoH: 103,
-    href: "#", // TODO: Tech website URL
+    href: "https://waywisetech.com/", // TODO: Tech website URL
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const companies = [
     logo: "/images/cards/trading.svg",
     logoW: 180,
     logoH: 128,
-    href: "#", // TODO: Trading website URL
+    href: "Way Wise Trading", // TODO: Trading website URL
   },
   {
     id: 3,
@@ -31,7 +31,7 @@ const companies = [
     logo: "/images/cards/jobs.svg",
     logoW: 245,
     logoH: 56,
-    href: "#", // TODO: Jobs website URL
+    href: "https://waywisejobs.com/", // TODO: Jobs website URL
   },
   {
     id: 4,
@@ -40,7 +40,7 @@ const companies = [
     logo: "/images/cards/pother-bazar.svg",
     logoW: 196,
     logoH: 121,
-    href: "#", // TODO: Pother Bazar website URL
+    href: "https://www.potherbazar.com/", // TODO: Pother Bazar website URL
   },
 ];
 
