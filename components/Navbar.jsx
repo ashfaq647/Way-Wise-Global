@@ -174,7 +174,14 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 w-full bg-black backdrop-blur">
         <nav className="mx-auto flex h-20 max-w-[120rem] items-center justify-between px-6 sm:h-24 lg:px-16 xl:px-[15.625rem]">
           {/* Logo: export node 1:1429 from Figma as SVG -> public/images/logo.svg */}
-          <Link href="/" className="shrink-0" onClick={closeMobile}>
+          <Link
+            href="/"
+            className="shrink-0"
+            onClick={(e) => {
+              closeMobile();
+              handleSmoothClick(e, "/");
+            }}
+          >
             <Image
               src="/images/logo.svg"
               alt="Way-Wise Global"
