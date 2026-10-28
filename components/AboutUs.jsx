@@ -172,7 +172,7 @@ export default function AboutUs() {
           <div className="flex w-full min-w-0 max-w-[41.5rem] flex-col gap-[1.875rem] min-[1100px]:max-w-[36.9375rem] min-[1100px]:flex-1 min-[1100px]:basis-0">
             <div className="flex flex-col gap-[1.3125rem] pb-6">
               <h2 className="font-oxanium text-4xl font-bold leading-tight min-[1100px]:text-5xl min-[1100px]:leading-[3.625rem]">
-                About Us
+                About Us together
               </h2>
               <div className="flex flex-col gap-4 font-poppins text-base leading-[max(1.5625rem,22px)] min-[1100px]:text-[max(1.125rem,16px)]">
                 <p>
