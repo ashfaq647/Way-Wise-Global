@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-
+import { PartnerWithUsLink } from "./PartnerWithUs";
 // Card images are exported without the location label; the label is rendered in code.
 const countries = [
   {
@@ -18,7 +17,7 @@ const countries = [
     labelBottom: "bottom-3 sm:bottom-[0.9375rem]",
   },
   {
-    name: "Asia",
+    name: "South Asia",
     image: "/images/country-asia.png", // Figma node 1:1639
     alt: "Cargo port in Asia",
     className: "aspect-[335/226] sm:aspect-auto",
@@ -67,12 +66,11 @@ export default function GlobalPresence() {
             leadership, technology and operational support to create sustainable long-term value.
           </p>
 
-          <Link
-            href="#about"
-            className="flex h-12 w-full items-center justify-center rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-[max(1rem,14px)] leading-[1.5] font-bold capitalize text-white transition-colors duration-450 delay-150 hover:bg-[#660100] sm:w-auto"
-          >
-            Discover our story
-          </Link>
+          <PartnerWithUsLink className="flex h-12 w-full items-center justify-center rounded-lg bg-[#b80100] px-[1.875rem] font-oxanium text-[max(1rem,14px)] leading-[1.5] font-bold capitalize text-white transition-colors duration-450 delay-150 hover:bg-[#660100] sm:w-auto">
+
+                      Partner with us
+
+          </PartnerWithUsLink>
         </div>
 
         <div className="grid w-full min-w-0 max-w-[43.375rem] grid-cols-1 gap-4 sm:aspect-[694/476] sm:grid-cols-2 sm:grid-rows-2 lg:gap-6 xl:flex-1">
