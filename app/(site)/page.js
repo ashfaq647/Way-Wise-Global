@@ -1,14 +1,10 @@
 import Hero from "@/components/Hero";
 import AboutUs from "@/components/AboutUs";
 import GlobalPresence from "@/components/GlobalPresence";
-import VisionChairman from "@/components/VisionChairman";
-import CeoStatement from "@/components/CeoStatement";
+import LeadershipMessage from "@/components/LeadershipMessage";
 import Companies from "@/components/Companies";
 import BuiltForGrowth from "@/components/BuiltForGrowth";
-import HowWeBuild from "@/components/HowWeBuild";
-import IndependentExpertise from "@/components/IndependentExpertise";
-import Faq from "@/components/Faq";
-import CtaBanner from "@/components/CtaBanner";
+import HowWeBuildExpertise from "@/components/HowWeBuildExpertise";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -17,14 +13,10 @@ export default function Home() {
       <Hero />
       <AboutUs />
       <GlobalPresence />
-      <VisionChairman />
-      <CeoStatement />
+      <LeadershipMessage />
       <Companies />
       <BuiltForGrowth />
-      <HowWeBuild />
-      <IndependentExpertise />
-      <Faq />
-      <CtaBanner />
+      <HowWeBuildExpertise />
       <Footer />
     </main>
   );

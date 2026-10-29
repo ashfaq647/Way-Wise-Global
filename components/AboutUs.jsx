@@ -22,7 +22,7 @@ const calSans = Cal_Sans({ subsets: ["latin"], weight: ["400"] });
 
 const stats = [
   {
-    value: 8,
+    value: 4,
     digits: 2,
     prefix: "",
     suffix: "+",
@@ -35,10 +35,10 @@ const stats = [
     prefix: "",
     suffix: "",
     title: "Global Markets",
-    sub: "USA · UAE · Bangladesh",
+    sub: "USA · UAE · South Asia",
   },
   {
-    value: 39,
+    value: 27,
     digits: 2,
     prefix: "",
     suffix: "+",
@@ -150,7 +150,7 @@ export default function AboutUs() {
                 <p
                   className={`${jakarta.className} whitespace-nowrap text-center text-[length:clamp(0.625rem,2.1cqw,1rem)] xl:text-[length:clamp(12px,2.41cqw,1rem)] font-medium leading-tight text-[#b80100]`}
                 >
-                  2k+ satisfied
+                  7k+ satisfied
                   <br className="min-[451px]:hidden" />{" "}
                   customers
                 </p>
