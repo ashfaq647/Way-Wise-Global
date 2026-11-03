@@ -1,4 +1,3 @@
-import Notice from "@/components/admin/Notice";
 import { eyebrowClass } from "@/components/admin/ui";
 
 // Page heading used at the top of every admin page. `eyebrow` is the small red label above
@@ -18,16 +17,5 @@ export default function AdminHeader({ eyebrow, title, description, actions }) {
       </div>
       {actions && <div className="flex shrink-0 flex-wrap gap-[12px]">{actions}</div>}
     </header>
-  );
-}
-
-// Shown on every page while the panel runs on sample data, so nothing on screen is
-// mistaken for real inquiries.
-export function SampleDataNotice() {
-  return (
-    <Notice variant="warning" title="Preview with sample data.">
-      These inquiries are placeholders and changes are not saved. Real submissions will appear here once the
-      database is connected.
-    </Notice>
   );
 }

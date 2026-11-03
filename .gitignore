@@ -32,6 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# generated Prisma Client (rebuilt by `npm run db:generate`)
+/lib/generated/
 
 # vercel
 .vercel
@@ -39,3 +43,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Database backups
+/backups/
+*.dump
+*.backup
+*.bak
+*.db
+*.sqlite
+backup*.sql

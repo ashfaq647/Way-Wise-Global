@@ -1,10 +1,15 @@
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminTopbar from "@/components/admin/AdminTopbar";
+import { requireAdmin } from "@/lib/auth/session";
 
 // Admin pages use px rather than rem throughout: from 1280px globals.css shrinks the root
 // font size with the viewport for the public site, and the dashboard should stay a
 // fixed, readable size.
-export default function AdminPanelLayout({ children }) {
+//
+// requireAdmin() here sends signed-out visitors to the login page before the shell renders.
+// It is a convenience, not the security boundary: every data function checks again.
+export default async function AdminPanelLayout({ children }) {
+  await requireAdmin();
   return (
     <>
       <AdminSidebar />

@@ -43,10 +43,6 @@ export default function AdminTopbar() {
       </nav>
 
       <div className="flex shrink-0 items-center gap-[12px]">
-        <span className="inline-flex items-center gap-[6px] rounded-full border border-[rgba(255,165,0,0.3)] bg-[rgba(255,165,0,0.06)] px-[10px] py-[3px] text-[12px] font-medium leading-[18px] text-[#ffcf80]">
-          <span aria-hidden className="size-[6px] rounded-full bg-[#FFA500]" />
-          Sample data
-        </span>
         <Link
           href="/"
           className={`inline-flex h-[36px] items-center gap-[6px] rounded-[8px] px-[12px] text-[13px] font-medium text-[#b2b2b2] ring-1 ring-inset ring-[#2e2e2e] transition-colors duration-200 hover:text-white hover:ring-[#4a4a4a] ${focusRing}`}

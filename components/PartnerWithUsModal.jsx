@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import localFont from "next/font/local";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
+import { HONEYPOT_FIELD, INQUIRY_OPPORTUNITIES } from "@/lib/inquiry-options";
+import { submitPartnerInquiry } from "@/lib/partner/actions";
 
 // Figma uses Oxanium SemiBold for the title and Close button. The site only loads 400 and
 // 700, and every next/font/google Oxanium shares one family name, so loading 600 there
@@ -14,15 +16,6 @@ const oxaniumSemiBold = localFont({
   weight: "600",
   declarations: [{ prop: "font-family", value: "oxaniumSemiBold" }],
 });
-
-// TODO: the Figma file has no options for this dropdown. These come from the site's own
-// copy (CtaBanner) - replace them with the real list.
-const opportunities = [
-  "Business Partnership",
-  "Specialized Services",
-  "International Collaboration",
-  "Other",
-];
 
 // Fields in Figma order: two per row from 640px, one per row below that.
 const fields = [
@@ -41,7 +34,9 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), selec
 // Sizes are in px, not rem: from 1280px the root font size shrinks with the viewport
 // (see globals.css), and the form should stay at its Figma size.
 const inputClass =
-  "h-[47px] w-full rounded-[8px] border-[0.5px] border-[#e9e7e2] bg-transparent px-[16px] font-poppins text-[14px] text-white outline-none transition-colors duration-200 placeholder:text-[#b2b2b2] focus:border focus:border-white";
+  "h-[47px] w-full rounded-[8px] border-[0.5px] border-[#e9e7e2] bg-transparent px-[16px] font-poppins text-[14px] text-white outline-none transition-colors duration-200 placeholder:text-[#b2b2b2] focus:border focus:border-white aria-[invalid=true]:border-[#e00000]";
+
+const errorTextClass = "font-poppins text-[13px] leading-[18px] text-[#ff4d4d]";
 
 function Label({ children, required }) {
   return (
@@ -49,6 +44,158 @@ function Label({ children, required }) {
       {children}
       {required && <span className="text-[#e00000]">*</span>}
     </span>
+  );
+}
+
+// Same look as the white Close button in the form
+function CloseButton({ onClose, className = "" }) {
+  return (
+    <button
+      type="button"
+      onClick={onClose}
+      className={`${oxaniumSemiBold.className} h-[56px] w-full shrink-0 cursor-pointer rounded-[4px] border border-white bg-white text-[16px] font-semibold leading-[20px] text-[#b80100] sm:w-[165px] ${className}`}
+    >
+      Close
+    </button>
+  );
+}
+
+// The form itself. Rendered only while the modal is open, so closing the modal also clears
+// the fields and any message. The server checks everything again (lib/partner/actions.js);
+// the browser's own `required`/email/url checks only give faster feedback.
+function PartnerForm({ onClose }) {
+  const [result, setResult] = useState(null); // last server response
+  const [isPending, startTransition] = useTransition();
+  const idPrefix = useId();
+  const fieldErrors = result?.ok === false ? (result.fieldErrors ?? {}) : {};
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (isPending) return; // already sending: ignore extra clicks / Enter presses
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        setResult(await submitPartnerInquiry(formData));
+      } catch {
+        setResult({ ok: false, error: "Sorry, your inquiry could not be sent. Please check your connection and try again." });
+      }
+    });
+  }
+
+  if (result?.ok) {
+    return (
+      <div role="status" className="flex flex-col gap-[24px] pt-[24px]">
+        <div className="flex flex-col gap-[8px]">
+          <p className={`${oxaniumSemiBold.className} text-[22px] font-semibold leading-[30px] text-white`}>Thank you!</p>
+          <p className="font-poppins text-[16px] leading-[26px] text-[#e9e7e2]">
+            We&apos;ve received your partnership inquiry and will be in touch soon.
+          </p>
+        </div>
+        <CloseButton onClose={onClose} />
+      </div>
+    );
+  }
+
+  // id of a field's error message, for aria-describedby
+  const errorId = (name) => `${idPrefix}-${name}-error`;
+  const errorProps = (name) =>
+    fieldErrors[name] ? { "aria-invalid": "true", "aria-describedby": errorId(name) } : {};
+  const fieldError = (name) =>
+    fieldErrors[name] && (
+      <span id={errorId(name)} className={errorTextClass}>
+        {fieldErrors[name][0]}
+      </span>
+    );
+
+  return (
+    <form onSubmit={handleSubmit} aria-busy={isPending || undefined} className="grid grid-cols-1 gap-[16px] pt-[24px] sm:grid-cols-2">
+      {fields.map((field) => (
+        <label key={field.name} className="flex min-w-0 flex-col gap-[8px]">
+          <Label required={field.required}>{field.label}</Label>
+          {field.select ? (
+            <span className="relative">
+              <select
+                name={field.name}
+                required={field.required}
+                defaultValue=""
+                {...errorProps(field.name)}
+                className={`${inputClass} cursor-pointer appearance-none pr-[40px] invalid:text-[#b2b2b2]`}
+              >
+                <option value="" disabled hidden>
+                  {field.placeholder}
+                </option>
+                {INQUIRY_OPPORTUNITIES.map((option) => (
+                  <option key={option} value={option} className="bg-[#0a0a0a] text-white">
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <Image
+                src="/images/icons/chevron-down.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="pointer-events-none absolute right-[16px] top-1/2 -translate-y-1/2"
+              />
+            </span>
+          ) : (
+            <input
+              type={field.type ?? "text"}
+              name={field.name}
+              placeholder={field.placeholder}
+              autoComplete={field.autoComplete}
+              required={field.required}
+              {...errorProps(field.name)}
+              className={inputClass}
+            />
+          )}
+          {fieldError(field.name)}
+        </label>
+      ))}
+
+      <label className="flex flex-col gap-[16px] sm:col-span-2">
+        <Label>Tell us about your opportunity</Label>
+        <textarea
+          name="message"
+          {...errorProps("message")}
+          className="h-[89px] w-full resize-none rounded-[8px] border border-[#e9e7e2] bg-transparent px-[16px] py-[12px] font-poppins text-[14px] text-white outline-none transition-colors duration-200 focus:border-white aria-[invalid=true]:border-[#e00000]"
+        />
+        {fieldError("message")}
+      </label>
+
+      {/* Spam trap: `hidden` (display: none) so people, screen readers and browser autofill
+          skip it; bots reading the HTML usually fill it in */}
+      <div hidden aria-hidden="true">
+        <label>
+          Leave this field empty
+          <input type="text" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
+
+      {result?.ok === false && (
+        <p role="alert" className={`${errorTextClass} text-[14px] sm:col-span-2`}>
+          {result.error}
+        </p>
+      )}
+
+      <div className="flex flex-col-reverse gap-[16px] sm:col-span-2 sm:flex-row">
+        <CloseButton onClose={onClose} />
+        <button
+          type="submit"
+          disabled={isPending}
+          className="group flex min-h-[56px] flex-1 cursor-pointer items-center justify-center gap-[8px] rounded-[8px] bg-[#b80100] px-[16px] py-[16px] text-center font-oxanium text-[16px] font-bold leading-[24px] text-white transition-colors duration-300 hover:bg-[#9a0100] disabled:cursor-wait disabled:bg-[#9a0100] disabled:opacity-80 sm:px-[30px]"
+        >
+          {isPending ? "SENDING…" : "SEND PARTNERSHIP INQUIRY"}
+          {/* Figma "Arrow/Dynamic": a second arrow slides in on hover */}
+          <span aria-hidden className="relative size-[24px] shrink-0 overflow-hidden">
+            <span className="absolute right-0 top-0 flex transition-transform duration-300 ease-out group-hover:translate-x-1/2 group-disabled:translate-x-0">
+              <ArrowRight className="size-[24px]" />
+              <ArrowRight className="size-[24px]" />
+            </span>
+          </span>
+        </button>
+      </div>
+    </form>
   );
 }
 
@@ -99,12 +246,6 @@ export default function PartnerWithUsModal({ open, onClose, returnFocusRef }) {
     };
   }, [open, onClose, returnFocusRef]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    // TODO: send `new FormData(e.currentTarget)` to the backend once there is one
-    onClose();
-  }
-
   return (
     <AnimatePresence>
       {open && (
@@ -151,80 +292,7 @@ export default function PartnerWithUsModal({ open, onClose, returnFocusRef }) {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-[16px] pt-[24px] sm:grid-cols-2">
-                {fields.map((field) => (
-                  <label key={field.name} className="flex min-w-0 flex-col gap-[8px]">
-                    <Label required={field.required}>{field.label}</Label>
-                    {field.select ? (
-                      <span className="relative">
-                        <select
-                          name={field.name}
-                          required={field.required}
-                          defaultValue=""
-                          className={`${inputClass} cursor-pointer appearance-none pr-[40px] invalid:text-[#b2b2b2]`}
-                        >
-                          <option value="" disabled hidden>
-                            {field.placeholder}
-                          </option>
-                          {opportunities.map((option) => (
-                            <option key={option} value={option} className="bg-[#0a0a0a] text-white">
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                        <Image
-                          src="/images/icons/chevron-down.svg"
-                          alt=""
-                          width={16}
-                          height={16}
-                          className="pointer-events-none absolute right-[16px] top-1/2 -translate-y-1/2"
-                        />
-                      </span>
-                    ) : (
-                      <input
-                        type={field.type ?? "text"}
-                        name={field.name}
-                        placeholder={field.placeholder}
-                        autoComplete={field.autoComplete}
-                        required={field.required}
-                        className={inputClass}
-                      />
-                    )}
-                  </label>
-                ))}
-
-                
-                <label className="flex flex-col gap-[16px] sm:col-span-2">
-                  <Label>Tell us about your opportunity</Label>
-                  <textarea
-                    name="message"
-                    className="h-[89px] w-full resize-none rounded-[8px] border border-[#e9e7e2] bg-transparent px-[16px] py-[12px] font-poppins text-[14px] text-white outline-none transition-colors duration-200 focus:border-white"
-                  />
-                </label>
-
-                <div className="flex flex-col-reverse gap-[16px] sm:col-span-2 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className={`${oxaniumSemiBold.className} h-[56px] w-full shrink-0 cursor-pointer rounded-[4px] border border-white bg-white text-[16px] font-semibold leading-[20px] text-[#b80100] sm:w-[165px]`}
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="submit"
-                    className="group flex min-h-[56px] flex-1 cursor-pointer items-center justify-center gap-[8px] rounded-[8px] bg-[#b80100] px-[16px] py-[16px] text-center font-oxanium text-[16px] font-bold leading-[24px] text-white transition-colors duration-300 hover:bg-[#9a0100] sm:px-[30px]"
-                  >
-                    SEND PARTNERSHIP INQUIRY
-                    {/* Figma "Arrow/Dynamic": a second arrow slides in on hover */}
-                    <span aria-hidden className="relative size-[24px] shrink-0 overflow-hidden">
-                      <span className="absolute right-0 top-0 flex transition-transform duration-300 ease-out group-hover:translate-x-1/2">
-                        <ArrowRight className="size-[24px]" />
-                        <ArrowRight className="size-[24px]" />
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </form>
+              <PartnerForm onClose={onClose} />
             </motion.div>
           </div>
         </div>

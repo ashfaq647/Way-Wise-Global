@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, Inbox, LayoutDashboard, LogOut, Menu, X } from "lucide-react";
 import { eyebrowClass, focusRing } from "@/components/admin/ui";
+import { signOutAdmin } from "@/lib/auth/actions";
 
 const nav = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
@@ -57,22 +58,16 @@ function SidebarContent({ pathname, onNavigate }) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-[12px]">
-        {/* Sign-in isn't implemented yet, so this button is shown but disabled rather than
-            pretending to end a session. */}
-        <div className="rounded-[10px] border border-[#2e2e2e] bg-[#0c0c0c]/80 p-[6px]">
+        {/* Ends the session on the server (signOutAdmin) and goes to the login page */}
+        <form action={signOutAdmin} className="rounded-[10px] border border-[#2e2e2e] bg-[#0c0c0c]/80 p-[6px]">
           <button
-            type="button"
-            disabled
-            aria-describedby="admin-logout-note"
-            className="flex h-[40px] w-full cursor-not-allowed items-center gap-[12px] rounded-[6px] px-[10px] text-[14px] text-[#6b6b6b]"
+            type="submit"
+            className={`group flex h-[40px] w-full cursor-pointer items-center gap-[12px] rounded-[6px] px-[10px] text-[14px] text-[#b2b2b2] transition-colors duration-200 hover:bg-[#151515] hover:text-white ${focusRing}`}
           >
-            <LogOut className="size-[18px]" aria-hidden />
+            <LogOut className="size-[18px] text-[#7a7a7a] transition-colors duration-200 group-hover:text-[#e00000]" aria-hidden />
             Log out
           </button>
-          <p id="admin-logout-note" className="px-[10px] pb-[6px] text-[12px] leading-[18px] text-[#6b6b6b]">
-            Available once sign-in is set up.
-          </p>
-        </div>
+        </form>
         <Link
           href="/"
           onClick={onNavigate}

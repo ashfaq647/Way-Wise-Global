@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { ArrowRight, CircleCheck, Clock, Inbox, Sparkles } from "lucide-react";
-import AdminHeader, { SampleDataNotice } from "@/components/admin/AdminHeader";
+import AdminHeader from "@/components/admin/AdminHeader";
 import StatCard from "@/components/admin/StatCard";
 import StatusBreakdown from "@/components/admin/StatusBreakdown";
 import InquiryTable from "@/components/admin/InquiryTable";
 import EmptyState from "@/components/admin/EmptyState";
 import { buttonSecondary } from "@/components/admin/ui";
-import { getInquiryStats, getRecentInquiries } from "@/lib/admin/mockInquiries";
+import { getInquiryStats, getRecentInquiries } from "@/lib/admin/inquiries";
 
 export const metadata = { title: "Dashboard" };
 
@@ -22,7 +22,6 @@ export default async function AdminDashboardPage() {
         title="Dashboard"
         description="An overview of partnership inquiries from the website."
       />
-      <SampleDataNotice />
 
       <section aria-labelledby="overview-heading">
         <h2 id="overview-heading" className="sr-only">
