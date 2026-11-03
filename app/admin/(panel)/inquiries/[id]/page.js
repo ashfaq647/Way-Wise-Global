@@ -13,12 +13,13 @@ import {
   Phone,
   User,
 } from "lucide-react";
-import AdminHeader, { SampleDataNotice } from "@/components/admin/AdminHeader";
+import AdminHeader from "@/components/admin/AdminHeader";
 import EmptyState from "@/components/admin/EmptyState";
 import InquiryStatusSelect from "@/components/admin/InquiryStatusSelect";
+import SendEmailDialog from "@/components/admin/SendEmailDialog";
 import StatusBadge from "@/components/admin/StatusBadge";
 import { buttonPrimary, buttonSecondary, focusRing, panelClass } from "@/components/admin/ui";
-import { getInquiryById } from "@/lib/admin/mockInquiries";
+import { getInquiryById } from "@/lib/admin/inquiries";
 import { formatDateTime } from "@/lib/admin/format";
 
 export async function generateMetadata({ params }) {
@@ -101,7 +102,6 @@ export default async function AdminInquiryDetailPage({ params }) {
         description={`${inquiry.jobTitle} at ${inquiry.company} · Submitted ${formatDateTime(inquiry.createdAt)}`}
         actions={<StatusBadge status={inquiry.status} />}
       />
-      <SampleDataNotice />
 
       <div className="grid grid-cols-1 gap-[20px] lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="flex flex-col gap-[20px]">
@@ -151,7 +151,7 @@ export default async function AdminInquiryDetailPage({ params }) {
 
         <div className="flex h-fit flex-col gap-[20px] lg:sticky lg:top-[88px]">
           <Panel id="status-heading" title="Status">
-            <InquiryStatusSelect initialStatus={inquiry.status} />
+            <InquiryStatusSelect inquiryId={inquiry.id} initialStatus={inquiry.status} />
             <dl className="mt-[20px] flex flex-col gap-[12px] border-t border-[#2e2e2e] pt-[16px] text-[13px]">
               <div className="flex items-center justify-between gap-[12px]">
                 <dt className="flex items-center gap-[6px] text-[#9d9d9d]">
@@ -165,18 +165,21 @@ export default async function AdminInquiryDetailPage({ params }) {
                   <Hash className="size-[14px]" aria-hidden />
                   Reference
                 </dt>
-                <dd className="font-mono text-[#e9e7e2]">{inquiry.id}</dd>
+                <dd className="font-mono text-[#e9e7e2]">{inquiry.reference}</dd>
               </div>
             </dl>
           </Panel>
 
-          {/* Shortcuts to the same mailto: and tel: links as in Contact Details */}
+          {/* Send email opens a compose dialog that sends from the server (the email address in
+              Contact Details is still a mailto: link as a fallback); Call is the same tel: link */}
           <Panel id="reply-heading" title="Get in Touch">
             <div className="flex flex-col gap-[10px]">
-              <a href={`mailto:${inquiry.email}`} className={`${buttonPrimary} w-full`}>
-                <Mail className="size-[16px]" aria-hidden />
-                Send email
-              </a>
+              <SendEmailDialog
+                inquiryId={inquiry.id}
+                recipientName={inquiry.fullName}
+                recipientEmail={inquiry.email}
+                defaultSubject={`Re: Your partnership inquiry (${inquiry.reference})`}
+              />
               <a href={phoneHref} className={`${buttonSecondary} w-full`}>
                 <Phone className="size-[16px]" aria-hidden />
                 Call

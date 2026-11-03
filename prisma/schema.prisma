@@ -1,0 +1,138 @@
+// Prisma ORM 7. The connection URL lives in prisma.config.mjs (read from .env), not here.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../lib/generated/prisma"
+  moduleFormat        = "esm"
+  // explicit .ts imports so the generated client also runs under plain Node (seed script)
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Keys match lib/admin/statuses.js
+enum InquiryStatus {
+  NEW
+  IN_REVIEW
+  CONTACTED
+  CLOSED
+}
+
+// A submission from the public Partner With Us form (components/PartnerWithUsModal.jsx)
+model Inquiry {
+  id          String        @id @default(cuid())
+  // internal insertion order (was named `reference`); used as the sorting tie-breaker
+  sequence    Int           @unique @default(autoincrement())
+  // human-readable reference shown in the admin panel, e.g. "WWG-2026-0001"
+  // (assigned by lib/inquiry-reference.js, never by user input)
+  reference   String        @unique @db.VarChar(20)
+  fullName    String        @db.VarChar(120)
+  jobTitle    String        @db.VarChar(120)
+  company     String        @db.VarChar(160)
+  email       String        @db.VarChar(254)
+  phone       String        @db.VarChar(40)
+  website     String?       @db.VarChar(300)
+  opportunity String        @db.VarChar(80)
+  business    String        @db.VarChar(120)
+  message     String?       @db.Text
+  status      InquiryStatus @default(NEW)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Last reference number handed out per UTC year (lib/inquiry-reference.js). One row per
+// year; incrementing it locks the row until the transaction commits, so concurrent
+// submissions can never get the same number.
+model InquiryReferenceCounter {
+  year       Int @id
+  lastNumber Int
+}
+
+// ---------------------------------------------------------------------------------------
+// Better Auth (admin sign-in). These models match the output of Better Auth 1.7.15's own
+// generator (`auth generate --adapter prisma`) for our options. Table names are Better
+// Auth's defaults (@@map).
+// ---------------------------------------------------------------------------------------
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+// One row per signed-in browser. The cookie holds the token; deleting the row signs it out.
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+// Sign-in methods. For email + password: providerId "credential", password = scrypt hash.
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+// Part of Better Auth's core schema (verification tokens). Unused while email
+// verification and password reset are disabled.
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// Login-attempt counters (rateLimit.storage = "database"), so limits survive restarts.
+model RateLimit {
+  id          String @id
+  key         String
+  count       Int
+  lastRequest BigInt
+
+  @@unique([key])
+  @@map("rateLimit")
+}

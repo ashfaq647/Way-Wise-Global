@@ -1,0 +1,26 @@
+# Local development database only. Not used in production.
+# Credentials come from .env (git-ignored); see .env.example.
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: waywise-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    ports:
+      # bound to localhost only, so the database isn't reachable from the network
+      - "127.0.0.1:${POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - waywise_pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  waywise_pgdata:
+    name: waywise_pgdata

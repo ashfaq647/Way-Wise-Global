@@ -60,6 +60,10 @@ export default function InquiryTable({ inquiries, showPhone = false, caption }) 
                     <Avatar name={inquiry.fullName} />
                     <div className="min-w-0">
                       <p className="font-medium text-white">{inquiry.fullName}</p>
+                      <p className="font-mono text-[12px] text-[#7a7a7a]">
+                        <span className="sr-only">Reference </span>
+                        {inquiry.reference}
+                      </p>
                       <p className="text-[12px] text-[#9d9d9d]">{inquiry.jobTitle}</p>
                     </div>
                   </div>
@@ -99,6 +103,10 @@ export default function InquiryTable({ inquiries, showPhone = false, caption }) 
                   <Avatar name={inquiry.fullName} />
                   <div className="min-w-0">
                     <p className="truncate text-[15px] font-medium leading-[22px] text-white">{inquiry.fullName}</p>
+                    <p className="truncate font-mono text-[12px] leading-[18px] text-[#7a7a7a]">
+                      <span className="sr-only">Reference </span>
+                      {inquiry.reference}
+                    </p>
                     <p className="truncate text-[13px] leading-[20px] text-[#e9e7e2]">{inquiry.company}</p>
                   </div>
                 </div>

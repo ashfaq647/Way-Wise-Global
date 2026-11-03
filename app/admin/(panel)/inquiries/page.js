@@ -1,6 +1,6 @@
-import AdminHeader, { SampleDataNotice } from "@/components/admin/AdminHeader";
+import AdminHeader from "@/components/admin/AdminHeader";
 import InquiriesBrowser from "@/components/admin/InquiriesBrowser";
-import { getInquiries } from "@/lib/admin/mockInquiries";
+import { getInquiries } from "@/lib/admin/inquiries";
 
 export const metadata = { title: "Inquiries" };
 
@@ -14,7 +14,6 @@ export default async function AdminInquiriesPage() {
         title="Inquiries"
         description="Partnership inquiries submitted through the Partner With Us form. Search, filter by status and open an inquiry to see its details."
       />
-      <SampleDataNotice />
       <InquiriesBrowser inquiries={inquiries} />
     </>
   );

@@ -7,7 +7,7 @@ import InquiryTable from "@/components/admin/InquiryTable";
 import EmptyState from "@/components/admin/EmptyState";
 import { buttonSecondary, focusRing, panelClass } from "@/components/admin/ui";
 
-const searchable = ["fullName", "company", "email", "phone", "jobTitle", "business"];
+const searchable = ["reference", "fullName", "company", "email", "phone", "jobTitle", "business"];
 
 // Filters the list it is given in the browser. Fine for the sample data; with a real
 // database the search and filter can move to the query instead.

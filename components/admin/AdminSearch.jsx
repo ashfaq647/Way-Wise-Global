@@ -29,7 +29,7 @@ export default function AdminSearch({ query, onQueryChange, status, onStatusChan
           type="search"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
-          placeholder="Search name, company, email or phone"
+          placeholder="Search name, company, email, phone or reference"
           autoComplete="off"
           className={`${fieldClass} pl-[42px] pr-[14px]`}
         />
