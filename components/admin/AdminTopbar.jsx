@@ -13,7 +13,7 @@ function crumbsFor(pathname) {
     const isDetail = pathname !== "/admin/inquiries";
     crumbs.push({ label: "Inquiries", href: isDetail ? "/admin/inquiries" : undefined });
     if (isDetail) crumbs.push({ label: "Inquiry details" });
-  }
+  } else if (pathname === "/admin/settings") crumbs.push({ label: "Settings" });
   return crumbs;
 }
 

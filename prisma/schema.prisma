@@ -112,8 +112,8 @@ model Account {
   @@map("account")
 }
 
-// Part of Better Auth's core schema (verification tokens). Unused while email
-// verification and password reset are disabled.
+// Part of Better Auth's core schema (verification tokens). Holds password reset tokens
+// (forgot password), stored hashed (verification.storeIdentifier in lib/auth/auth.js).
 model Verification {
   id         String   @id
   identifier String
