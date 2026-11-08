@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, Inbox, LayoutDashboard, LogOut, Menu, X } from "lucide-react";
+import { ArrowLeft, Inbox, LayoutDashboard, LogOut, Menu, Settings, X } from "lucide-react";
 import { eyebrowClass, focusRing } from "@/components/admin/ui";
 import { signOutAdmin } from "@/lib/auth/actions";
 
 const nav = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Inquiries", href: "/admin/inquiries", icon: Inbox },
+  { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 function isActive(pathname, item) {

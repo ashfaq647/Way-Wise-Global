@@ -3,6 +3,15 @@
 import { animate, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
+// Easing curves by name. A constant at module level (not rebuilt on every render), so the
+// animation effect below doesn't need it as a dependency.
+const EASE_MAP = {
+  linear: "linear",
+  easeOut: [0.33, 1, 0.68, 1],
+  expo: [0.16, 1, 0.3, 1],
+  spring: [0.22, 1.2, 0.36, 1],
+};
+
 export default function CountUp({
   to,
   from = 0,
@@ -40,13 +49,6 @@ export default function CountUp({
 
   const active = trigger === "load" || isInView;
 
-  const easeMap = {
-    linear: "linear",
-    easeOut: [0.33, 1, 0.68, 1],
-    expo: [0.16, 1, 0.3, 1],
-    spring: [0.22, 1.2, 0.36, 1],
-  };
-
   useEffect(() => {
     if (!active || !startWhen || started) return;
 
@@ -79,7 +81,7 @@ export default function CountUp({
       return animate(startOffset, targetOffset, {
         duration,
         delay: index * Math.min(0.06, duration * 0.08),
-        ease: easeMap[easing] || easeMap.easeOut,
+        ease: EASE_MAP[easing] || EASE_MAP.easeOut,
         onUpdate: (position) => {
           strip.style.transform = `translateY(-${position * 1.2}em)`;
         },

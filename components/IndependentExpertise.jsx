@@ -6,6 +6,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { PartnerWithUsLink } from "@/components/PartnerWithUs";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { Space_Grotesk, Inter } from "next/font/google";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400"] });
@@ -80,10 +81,20 @@ function CheckCircleIcon() {
 
 export default function IndependentExpertise() {
   const [active, setActive] = useState("Technology");
-  const [inView, setInView] = useState(false); // diagram was (mostly) on screen once -> entrance starts
+  const [enteredView, setInView] = useState(false); // diagram was (mostly) on screen once
   const [visible, setVisible] = useState(false); // diagram is on screen RIGHT NOW (animations run only then)
-  const [settled, setSettled] = useState(false); // entrance is finished -> everything is final
-  const [reduce, setReduce] = useState(false); // visitor has "reduce motion" turned on
+  const [entranceDone, setSettled] = useState(false); // entrance timer has finished
+  const reduce = usePrefersReducedMotion(); // visitor has "reduce motion" turned on
+  // With reduce motion there is no entrance: everything is shown in its final state at once.
+  // That is also stored, so it stays final if the setting is turned off later (setting state
+  // during render, guarded so it runs once, is React's pattern for state that follows a
+  // changing value; it only happens after hydration, when the real setting is known).
+  if (reduce && !(enteredView && entranceDone)) {
+    setInView(true);
+    setSettled(true);
+  }
+  const inView = enteredView || reduce; // entrance starts
+  const settled = entranceDone || reduce; // everything is final
   const [hovering, setHovering] = useState(false); // mouse is over the diagram
   const [touchTick, setTouchTick] = useState(0); // changes every time a finger touches the diagram
 
@@ -91,32 +102,28 @@ export default function IndependentExpertise() {
   const dotRef = useRef(null);
   const waveRef = useRef(null);
   const nextDelayRef = useRef(AUTO_MS); // how long to wait before the next highlight
-  const lastScrollRef = useRef(0); // time of the last page scroll
+  const lastScrollRef = useRef(-Infinity); // event timestamp of the last page scroll
 
   // true while the page is scrolling (and 0.3 s after). During that time the mouse may
   // "touch" a node only because the page moved under it -> we ignore such hovers.
-  const scrolledRecently = () => Date.now() - lastScrollRef.current < 300;
+  // Compares the event's own timestamp with the last scroll event's timestamp (same clock),
+  // so the clock is never read while rendering.
+  const scrolledRecently = (event) => event.timeStamp - lastScrollRef.current < 300;
 
   // hover (mouse) may only change the highlight when the entrance is finished
   // and the mouse really moved (not because of scrolling)
-  const hoverActivate = (label) => {
-    if (!settled || scrolledRecently()) return;
+  const hoverActivate = (label, event) => {
+    if (!settled || scrolledRecently(event)) return;
     setActive(label);
   };
 
-  // 1) Start the entrance when the diagram is mostly on screen (only once)
+  // 1) Start the entrance when the diagram is mostly on screen (only once).
+  //    With reduce motion there is no entrance (inView and settled are already true).
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setReduce(reduceMotion);
+    if (reduce) return;
 
     const el = diagramRef.current;
     if (!el) return;
-
-    if (reduceMotion) {
-      setInView(true); // no animation: show everything at once
-      setSettled(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -133,7 +140,7 @@ export default function IndependentExpertise() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [reduce]);
 
   // 1b) Is the diagram on screen right now? (the red light, the wave and the auto highlight
   //     only run while it is. This keeps the browser light and avoids drawing glitches.)
@@ -149,8 +156,8 @@ export default function IndependentExpertise() {
 
   // 2) Remember when the page was scrolled last
   useEffect(() => {
-    const onScroll = () => {
-      lastScrollRef.current = Date.now();
+    const onScroll = (event) => {
+      lastScrollRef.current = event.timeStamp;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -237,7 +244,7 @@ export default function IndependentExpertise() {
           // "mouse is over the diagram" only counts when the mouse REALLY moves
           // (not when the page scrolls under a mouse that is not moving)
           onPointerMove={(e) => {
-            if (e.pointerType === "mouse" && !scrolledRecently()) setHovering(true);
+            if (e.pointerType === "mouse" && !scrolledRecently(e)) setHovering(true);
           }}
           onPointerLeave={(e) => e.pointerType === "mouse" && setHovering(false)}
           onPointerDown={(e) => {
@@ -399,8 +406,8 @@ export default function IndependentExpertise() {
                   >
                     <button
                       type="button"
-                      onMouseEnter={() => hoverActivate(label)}
-                      onMouseMove={() => hoverActivate(label)}
+                      onMouseEnter={(e) => hoverActivate(label, e)}
+                      onMouseMove={(e) => hoverActivate(label, e)}
                       onFocus={() => setActive(label)}
                       onClick={() => setActive(label)}
                       aria-label={label}

@@ -37,8 +37,16 @@ const SOCIALS = [
   { label: "Instagram", href: "https://instagram.com/", red: false, path: "M7.8 2h8.4A5.8 5.8 0 0122 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8A5.8 5.8 0 012 16.2V7.8A5.8 5.8 0 017.8 2zm-.2 2A3.6 3.6 0 004 7.6v8.8A3.6 3.6 0 007.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6A3.6 3.6 0 0016.4 4H7.6zm9.65 1.5a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 2a3 3 0 100 6 3 3 0 000-6z" },
 ];
 
-// Figma 41:2330 shows only the Services column, with these four links
+// Figma 41:2330 shows only the Services column, with these four links; Quick Links was
+// added before it. `external: true` opens the link in a new tab.
 const COLUMNS = [
+  {
+    title: "Quick Links",
+    links: [
+      { label: "P&L", href: "https://pnl.waywisetech.com/login", external: true },
+      { label: "Old P&L", href: "https://expense.waywisetech.com/accounts/login/?next=/", external: true },
+    ],
+  },
   {
     title: "Services",
     links: [
@@ -194,7 +202,7 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="flex xl:flex-none">
+            <div className="flex flex-wrap gap-x-12 gap-y-10 sm:gap-x-20 xl:flex-none">
               {COLUMNS.map((col) => (
                 <nav key={col.title} aria-label={col.title} className="flex flex-col gap-6">
                   <h3
@@ -207,6 +215,7 @@ export default function Footer() {
                       <li key={l.label}>
                         <Link
                           href={l.href}
+                          {...(l.external && { target: "_blank", rel: "noopener noreferrer" })}
                           className="inline-block whitespace-normal py-1.5 font-poppins text-[max(0.875rem,13px)] leading-[calc(1.25/0.875)] text-white transition-all duration-300  hover:text-[#b80100] active:text-[#ff4d4d] sm:whitespace-nowrap sm:py-0"
                         >
                           {l.label}
